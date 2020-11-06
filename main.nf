@@ -111,7 +111,7 @@ process getGenomic_features{
     file "output.counts" into FileCount
     file "output.counts.summary" into logsFileCount
     
-    script
+    script:
     """ 
      featureCounts -p -t gene -g gene_id -s 0 -a gtf -o output.counts bam
     """
