@@ -9,7 +9,7 @@ process getFastq{
     val srr from SRAID
  
     output :
-    tuple var(srr), file("*_1.fastq.gz"), file("*_2.fastq.gz") into fastq_files
+    tuple var(SRAID), file("*_1.fastq.gz"), file("*_2.fastq.gz") into fastq_files
  
     script :
     """
