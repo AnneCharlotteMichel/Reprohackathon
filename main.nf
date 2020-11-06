@@ -14,7 +14,7 @@ process getFastq{
     script :
     """
     wget -O ${srr}.sra https://sra-downloadb.be-md.ncbi.nlm.nih.gov/sos1/sra-pub-run-5/${srr}/${srr}.1
-    singularity run sratoolkit_v2.5.7.sif fastq-dump --gzip --split-files ./${srr}.sra   
+    fastq-dump --gzip --split-files ./${srr}.sra   
     """
 
 }
