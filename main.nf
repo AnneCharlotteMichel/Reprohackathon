@@ -89,9 +89,6 @@ process mapFastq {
  
  
 process getGenomic_features{
-    input:
-    val url from getUrl
- 
     output:
     file gtf into annotation 
     
