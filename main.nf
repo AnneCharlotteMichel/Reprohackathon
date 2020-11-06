@@ -90,7 +90,7 @@ process mapFastq {
  
 process getGenomic_features{
     output:
-    file "Homo_sapiens.GRCh38.101.chr.gtf.gz" into annotation 
+    file "*.gtf" into annotation 
     
     script:
     """
