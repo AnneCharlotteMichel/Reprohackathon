@@ -9,7 +9,7 @@ process getFastq{
     val srr from SRAID
  
     output :
-    tuple val(SRAID), file("*_1.fastq.gz"), file("*_2.fastq.gz") into fastq_files
+    tuple val(srr), file("*_1.fastq.gz"), file("*_2.fastq.gz") into fastq_files
  
     script :
     """
@@ -64,7 +64,7 @@ process genomeIndex {
  
 process mapFastq {
     input:
-    tuple var(srr), file(f1), file(f2) from fastq_files
+    tuple val(srr), file(f1), file(f2) from fastq_files
  
     output:
     file bam into mapped_fastq_files
