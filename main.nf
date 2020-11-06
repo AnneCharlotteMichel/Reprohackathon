@@ -105,7 +105,7 @@ process getGenomic_features{
  process getCount_feature{
     input:
     file gtf from annotation
-    file bam from Filebam.toList()
+    file bam from mapped_fastq_files.toList()
     
     output:
     file "output.counts" into FileCount
