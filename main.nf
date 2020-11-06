@@ -54,7 +54,7 @@ process genomeIndex {
  
     script :
     """
-    STAR --runThreadN 16 \
+    STAR --runThreadN task.cpus \
     --runMode genomeGenerate \
     --genomeDir ref \
     --genomeFastaFiles ${gen}
@@ -76,7 +76,7 @@ process mapFastq {
         --outFilterMultimapNmax 10 \
         --genomeDir ref \
         --readFilesIn <(gunzip -c ${f1}) <(gunzip -c ${f2}) \
-        --runThreadN 2 \
+        --runThreadN task.cpus \
         --outSAMunmapped None \
         --outSAMtype BAM SortedByCoordinate
         --outStd BAM_SortedByCoordinate \
