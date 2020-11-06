@@ -21,7 +21,7 @@ process getFastq{
  
 process getChr {
     input :
-    val chr from liste_chromosome
+    val chr from liste_chromosomes
  
     output :
     file "*.fa.gz" into genome_files
