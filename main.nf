@@ -87,7 +87,6 @@ process mapFastq {
     """
 }
  
-getUrl = Channel.of("ftp://ftp.ensembl.org/pub/release-101/gtf/homo_sapiens/Homo_sapiens.GRCh38.101.chr.gtf.gz")
  
 process getGenomic_features{
     input:
@@ -98,7 +97,7 @@ process getGenomic_features{
     
     script:
     """
-    wget url
+    wget ftp://ftp.ensembl.org/pub/release-101/gtf/homo_sapiens/Homo_sapiens.GRCh38.101.chr.gtf.gz
     gzip -d  Homo_sapiens.GRCh38.101.chr.gtf.gz
     """
 }
