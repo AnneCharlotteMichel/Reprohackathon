@@ -22,7 +22,6 @@ process getGenomic_features{
 	
 	script
 	"""
-	singularity pull docker://evolbioinfo/subread:v2.0.1  
  	./subread-v2.0.1.simg -p -t gene -g gene_id -s 0 -a Homo_sapiens.GRCh38.101.chr.gtf -o output.counts *.bam
 	"""
 }	
