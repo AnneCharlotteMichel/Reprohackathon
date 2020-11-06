@@ -41,7 +41,7 @@ process concatChr{
 
     script :
     """
-    gunzip -c *.fa.gz > ref.fa
+    gunzip -c chr > ref.fa
     """
 }
  
