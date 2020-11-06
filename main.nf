@@ -98,7 +98,8 @@ process getGenomic_features{
     
     script:
     """
-    wget     gzip -d  Homo_sapiens.GRCh38.101.chr.gtf.gz
+    wget url
+    gzip -d  Homo_sapiens.GRCh38.101.chr.gtf.gz
     """
 }
  
