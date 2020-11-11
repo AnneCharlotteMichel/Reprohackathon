@@ -50,13 +50,13 @@ process genomeIndex {
     file gen from genome
  
     output :
-    file "ref" into star_index
+    path "ref" into star_index
  
     script :
     """
     STAR --runThreadN task.cpus \
     --runMode genomeGenerate \
-    --genomeDir ref \
+    --genomeDir ref/ \
     --genomeFastaFiles ${gen}
     """
 }
