@@ -34,7 +34,7 @@ process getChr {
  
 process concatChr{
     input :
-    val chr from genome_files.toList()
+    path chr from genome_files.collectFile()
  
     output:
     file "ref.fa" into genome
