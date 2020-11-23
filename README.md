@@ -35,9 +35,9 @@ conda install singularity=3.6.3
 ```
 sudo apt install r-base
 ```
-* Se placer dans au niveau de /mnt/mydatalocal/
+* Se placer dans au niveau de /mnt/
 ```
-cd /mnt/mydatalocal/ 
+cd /mnt/
 ```
 * Cloner ce répertoire:
 ```
