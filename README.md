@@ -4,28 +4,21 @@ Ce repertoire Github contient le travail du Groupe 7 pour le projet Reprohackath
 
 Pour cela nous allons analyser le jeu de données utilisé dans ces deux articles et essayer de trouver des gènes dont l'expression est différente. 
 
+
 ## Description du workflow
-Notre workflow se trouve dans le fichier main.nf, il s'accompagne du fichier nextflow.config. 
+Notre workflow se trouve dans le fichier main.nf, il s'accompagne du fichier nextflow.config et du fichier coldata.csv. 
+* Le process *getFastq* permet de télécharger les fichiers sra depuis le NCBI. 
+* Le process *dumpFastq* permet de convertir les fichiers sra en fastq.
+* Le process *getChr* permet de télécharger depuis Ensembl les séquences des chromosomes humains nécessaire pour générer un index sur le génome.
+* Le process *concatChr* permet de décompresser les séquences des chromosomes et de les mettre dans un unique fichier.
+* Le process *genomeIndex* crée un index sur le génome à l'aide de STAR.
+* Le process *mapFastq* indexe les fichiers fastq sur le génome.
+* Le process *samFastq* permet de changer le format des alignement avec SAMTOOLS. 
+* Le process *getGenomic_features* permet de télécharger les fichiers d'annotations du génome. 
+* Le process *getCount_feature* permet de compter les reads alignés sur chaque gène.
+* Le process *deseq* permet de faire des tests statistiques pour savoir si une séquences est plus représentée qu'une autre.
 
-Le process *getFastq* permet de télécharger les fichiers sra depuis le NCBI. 
-
-Le process *dumpFastq* permet de convertir les fichiers sra en fastq.
-
-Le process *getChr* permet de télécharger depuis Ensembl les séquences des chromosomes humains nécessaire pour générer un index sur le génome.
-
-Le process *concatChr* permet de décompresser les séquences des chromosomes et de les mettre dans un unique fichier.
-
-Le process *genomeIndex* crée un index sur le génome à l'aide de STAR.
-
-Le process *mapFastq* indexe les fichiers fastq sur le génome.
-
-Le process *samFastq* permet de changer le format des alignement avec SAMTOOLS. 
-
-Le process *getGenomic_features* permet de télécharger les fichiers d'annotations du génome. 
-
-Le process *getCount_feature* permet de compter les reads alignés sur chaque gène.
-
-Le process *deseq* permet de faire des tests statistiques pour savoir si une séquences est plus représentée qu'une autre.
+Le fichier coldata.csv permet de savoir si le gène SF2B1 est muté selon le fichier sra considéré. 
 
 
 ## Utilisation sur une machine virtuelle (VM)
