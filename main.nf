@@ -9,7 +9,7 @@ liste_chromosomes = Channel.of("1", "2", "3", "4", "5", "6", "7", "8", "9", "10"
 // Liste des fichiers bam pour le process deseq
 SRAID2 = Channel.of('c("SRR628582.bam","SRR628584.bam", "SRR628586.bam", "SRR628588.bam", "SRR628589.bam", "SRR628583.bam", "SRR628585.bam", "SRR628587.bam")')
 
-// Mise en paramètre du fichier coldata.csv lors du run
+// Mise en paramètre du fichier coldata.csv (fichier renseignant sur le plan d'expérience) lors du run 
 params.design_file="/mnt/Reprohackathon/coldata.csv"
 fichier_mutant = Channel.of(params.design_file)
 
@@ -45,7 +45,7 @@ process dumpFastq{
 }
 
 
-// Téléchargement t compression  des séquences des chromoses humains à partir de la liste des chromosomes
+// Téléchargement et décompression des séquences des chromosomes humains à partir de la liste des chromosomes
 process getChr {
     input :
     val chr from liste_chromosomes
@@ -61,7 +61,7 @@ process getChr {
 }
 
 
-// Décompression et concaténation des séquences des chromosomes en un seul fichier
+// Concaténation des séquences des chromosomes en un seul fichier
 process concatChr {
     input:
     file gen from genome_files.collect()
@@ -94,7 +94,7 @@ process genomeIndex {
 }
  
 
-// Mapping des fichiers FASTQ compressé avec le génome index 
+// Mapping des fichiers FASTQ compressés avec le génome index (alignement des séquences avec le génôme humain) 
 process mapFastq {
     publishDir "bam/"
 
@@ -203,7 +203,7 @@ process deseq {
 }
 
 
-// Sélection des résultats ayant une p-valeur ajusté inférieur à 0.01 dans un fichier csv
+// Sélection des gènes ayant une p-valeur ajustée inférieure à 0.01 (et donc présentant une différence d'expression significative entre les cancers de classe 1 et 2) dans un fichier csv
 process filter{
         publishDir "filter_result/"
 
