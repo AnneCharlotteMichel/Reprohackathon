@@ -182,7 +182,8 @@ process deseq {
         path data from fichier_mutant
 
         output :
-        file "deseq_result.csv" into result_deseq
+        file "deseq_filt.csv" into result_deseq
+	file "saving_plot1.jpeg" into result_graph
 
         script :
         """
@@ -201,10 +202,11 @@ process deseq {
 	jpeg(file="saving_plot1.jpeg")
         plotMA(res, ylim=c(-2,2))
 	dev.off()
-	resOrdered <- res[order(res$padj),]
-	write.csv(as.data.frame(resOrdered), file="deseq_result.csv")
+	res=as.data.frame(res)
+	resOrdered <- res[order(res[,"padj"]),]
+	write.csv(resOrdered, file="deseq_result.csv")
 	res_filt <- subset(resOrdered, padj < 0.01)
-	write.csv(as.data.frame(res_filt), file="deseq_filt.csv")
+	write.csv(res_filt, file="deseq_filt.csv")
          """
 }
 
