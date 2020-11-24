@@ -199,34 +199,13 @@ process deseq {
         dds <- dds[keep,]
         dds <- DESeq(dds)
         res <- results(dds)
-	jpeg(file="saving_plot1.jpeg")
-        plotMA(res, ylim=c(-2,2))
-	dev.off()
 	res=as.data.frame(res)
+	png(file="saving_plot1.png")
+        plotMA(res[,c("","baseMean", "log2FoldChange")], ylim=c(-2,2))
+	dev.off()
 	resOrdered <- res[order(res[,"padj"]),]
 	write.csv(resOrdered, file="deseq_result.csv")
 	res_filt <- subset(resOrdered, padj < 0.01)
 	write.csv(res_filt, file="deseq_filt.csv")
          """
-}
-
-
-// Sélection des gènes ayant une p-valeur ajustée inférieure à 0.01 (et donc présentant une différence d'expression significative entre les cancers de classe 1 et 2) dans un fichier csv
-process filter{
-        publishDir "filter_result/"
-
-        input:
-        file result from result_deseq
-        
-        output :
-        file "deseq_filtered_res.csv"
-
-        script:
-        """
-        #!/usr/bin/env Rscript
-        library("tidyverse")
-        res = read.csv("$result", sep=",", header=TRUE)
-        res = filter(res,padj<0.01)
-        write.csv(res, file="deseq_filtered_res.csv")
-        """
 }
