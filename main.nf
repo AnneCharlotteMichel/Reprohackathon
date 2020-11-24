@@ -118,7 +118,7 @@ process mapFastq {
         --outStd BAM_SortedByCoordinate \
         --genomeLoad NoSharedMemory \
         --limitBAMsortRAM ${task.memory} \
-	   >${srr}.bam    
+	 >${srr}.bam    
     """
 }
 
@@ -198,8 +198,13 @@ process deseq {
         dds <- dds[keep,]
         dds <- DESeq(dds)
         res <- results(dds)
+	jpeg(file="saving_plot1.jpeg")
         plotMA(res, ylim=c(-2,2))
-	write.csv(as.data.frame(res), file="deseq_result.csv")
+	dev.off()
+	resOrdered <- res[order(res$padj),]
+	write.csv(as.data.frame(resOrdered), file="deseq_result.csv")
+	res_filt <- subset(resOrdered, padj < 0.01)
+	write.csv(as.data.frame(res_filt), file="deseq_filt.csv")
          """
 }
 
