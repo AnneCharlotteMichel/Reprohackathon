@@ -221,11 +221,11 @@ process plot {
 	library("ggplot2")
 	all_result=read.csv("${x}", header=TRUE, sep=",")
 	
-	all_result[,"diffexpressed"] <- "NO"
+	all_result[,"diffexpressed"] <- "Non significatif"
 	# if log2Foldchange > 0.6 and padj < 0.05, on attribut la valeur "UP" 
-	all_result[,"diffexpressed"][all_result[,"log2FoldChange"] > 0.6 & all_result[,"padj"] < 0.05] <- "UP"
+	all_result[,"diffexpressed"][all_result[,"log2FoldChange"] > 0.6 & all_result[,"padj"] < 0.05] <- "Supérieur"
 	# if log2Foldchange < -0.6 and padj < 0.05, on attribut la valeur "DOWN"
-	all_result[,"diffexpressed"][all_result[,"log2FoldChange"] < -0.6 & all_result[,"padj"] < 0.05] <- "DOWN"
+	all_result[,"diffexpressed"][all_result[,"log2FoldChange"] < -0.6 & all_result[,"padj"] < 0.05] <- "Inférieur"
 
 	p <- ggplot(all_result, aes(x=log2FoldChange, y=-log10(padj), col=diffexpressed)) + geom_point() + theme_minimal()
 
