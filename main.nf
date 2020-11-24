@@ -199,9 +199,8 @@ process deseq {
         dds <- dds[keep,]
         dds <- DESeq(dds)
         res <- results(dds)
-	png(filename = "MA_plot.png", width = 480, height = 480)
-        plotMA(res)
-	dev.off()	
+	plotMA(res)
+	savePlot("MA_plot", type="png")
 	res=as.data.frame(res)
 	resOrdered <- res[order(res[,"padj"]),]
 	write.csv(resOrdered, file="deseq_result.csv")
