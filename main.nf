@@ -198,7 +198,8 @@ process deseq {
         dds <- dds[keep,]
         dds <- DESeq(dds)
         res <- results(dds)
-        write.csv(as.data.frame(res), file="deseq_result.csv")
+        plotMA(res, ylim=c(-2,2))
+	write.csv(as.data.frame(res), file="deseq_result.csv")
          """
 }
 
