@@ -220,7 +220,16 @@ process plot {
         #!/usr/bin/env Rscript
 	library("ggplot2")
 	all_result=read.csv("${x}", header=TRUE, sep=",")
-	p<-ggplot(data=all_result, aes(x=log2FoldChange, y=-log10(padj))) + geom_point() + theme_minimal()
+	
+	all_result[,"diffexpressed"] <- "NO"
+	# if log2Foldchange > 0.6 and padj < 0.05, on attribut la valeur "UP" 
+	all_result[,"diffexpressed"][all_result[,"log2FoldChange"] > 0.6 & all_result[,"padj"] < 0.05] <- "UP"
+	# if log2Foldchange < -0.6 and padj < 0.05, on attribut la valeur "DOWN"
+	all_result[,"diffexpressed"][all_result[,"log2FoldChange"] < -0.6 & all_result[,"padj"] < 0.05] <- "DOWN"
+
+	p <- ggplot(all_result, aes(x=log2FoldChange, y=-log10(padj), col=diffexpressed)) + geom_point() + theme_minimal()
+
+	# On ajoute des lignes pour rendre padj = 0,05 visible, ainsi que log2FoldChange=0,6/-0,6
 	p2 <- p + geom_vline(xintercept=c(-0.6, 0.6), col="red") + geom_hline(yintercept=-log10(0.05), col="red")
 	ggsave("plot.pdf",p2, width=5, height=5)
 
