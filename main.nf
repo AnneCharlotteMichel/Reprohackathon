@@ -183,7 +183,7 @@ process deseq {
 
         output :
         file "deseq_filt.csv" into result_deseq
-	file "saving_plot1.jpeg" into result_graph
+	file "MA_plot.png" into result_graph
 
         script :
         """
@@ -199,13 +199,13 @@ process deseq {
         dds <- dds[keep,]
         dds <- DESeq(dds)
         res <- results(dds)
+	png(filename = "MA_plot.png", width = 480, height = 480)
+        plotMA(res)
+	dev.off()	
 	res=as.data.frame(res)
-	png(file="saving_plot1.png")
-        plotMA(res[,c("","baseMean", "log2FoldChange")], ylim=c(-2,2))
-	dev.off()
 	resOrdered <- res[order(res[,"padj"]),]
 	write.csv(resOrdered, file="deseq_result.csv")
 	res_filt <- subset(resOrdered, padj < 0.01)
 	write.csv(res_filt, file="deseq_filt.csv")
-         """
+        """
 }
