@@ -221,7 +221,8 @@ process plot {
 	library("ggplot2")
 	all_result=read.csv("${x}", header=TRUE, sep=",")
 	p<-ggplot(data=all_result, aes(x=log2FoldChange, y=-log10(padj))) + geom_point() + theme_minimal()
-	ggsave("plot.pdf",p, width=5, height=5)
+	p2 <- p + geom_vline(xintercept=c(-0.6, 0.6), col="red") + geom_hline(yintercept=-log10(0.05), col="red")
+	ggsave("plot.pdf",p2, width=5, height=5)
 
 """
 
