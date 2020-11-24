@@ -182,8 +182,8 @@ process deseq {
         path data from fichier_mutant
 
         output :
-        file "deseq_filt.csv" into result_deseq
-	file "MA_plot.png" into result_graph
+        file "deseq_filt.csv" into result_filt_deseq
+	file "deseq_result.csv" into result_deseq
 
         script :
         """
@@ -199,8 +199,6 @@ process deseq {
         dds <- dds[keep,]
         dds <- DESeq(dds)
         res <- results(dds)
-	plotMA(res)
-	savePlot("MA_plot", type="png")
 	res=as.data.frame(res)
 	resOrdered <- res[order(res[,"padj"]),]
 	write.csv(resOrdered, file="deseq_result.csv")
@@ -208,3 +206,26 @@ process deseq {
 	write.csv(res_filt, file="deseq_filt.csv")
         """
 }
+
+process plot {
+	publishDir "plot/"
+	
+	input:
+	path x from result_deseq
+	path y from result_filt_deseq
+
+	output:
+	file "plot.png" into plot
+
+	script:
+	"""
+        #!/usr/bin/env Rscript
+	library("ggplot2")
+	all_result=read.csv("${x}", header=TRUE, sep=",")
+	p <- ggplot(data=all_result, aes(x=log2FoldChange, y=-log10(padj))) + geom_point() + theme_minimal()
+	ggsave("plot.png", width=5, height=5)
+
+"""
+
+}
+
