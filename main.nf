@@ -208,22 +208,20 @@ process deseq {
 }
 
 process plot {
-	publishDir "plot/"
-	
+	publishDir "plot/", mode: 'copy', overwrite: true	
 	input:
 	path x from result_deseq
-	path y from result_filt_deseq
 
 	output:
-	file "plot.png" into plot
+	file "plot.pdf"
 
 	script:
 	"""
         #!/usr/bin/env Rscript
 	library("ggplot2")
 	all_result=read.csv("${x}", header=TRUE, sep=",")
-	p <- ggplot(data=all_result, aes(x=log2FoldChange, y=-log10(padj))) + geom_point() + theme_minimal()
-	ggsave("plot.png", width=5, height=5)
+	p<-ggplot(data=all_result, aes(x=log2FoldChange, y=-log10(padj))) + geom_point() + theme_minimal()
+	ggsave("plot.pdf",p, width=5, height=5)
 
 """
 
