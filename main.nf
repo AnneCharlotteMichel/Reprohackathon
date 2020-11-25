@@ -174,7 +174,7 @@ process getCount_feature{
 
 // Analyse statistique à l'aide de R et de la librarie DESeq2
 process deseq {
-        publishDir "deseq_resultat/"
+        publishDir "deseq_resultat/", mode: 'copy', overwrite: true
 
         input :
         val srr from SRAID2
