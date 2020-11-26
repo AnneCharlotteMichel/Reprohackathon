@@ -227,10 +227,12 @@ process plot {
 	publishDir "plot/", mode: 'copy', overwrite: true	
 	input:
 	path x from result_deseq
-	path(count) from "/mnt/Reprohackathon/deseq_resultat/padj_min.csv"
+	tuple path(count), val(title) from gene_counts
+
 	output:
 	file "plot.pdf"
 	file "count.pdf"
+
 	script:
 	"""
         #!/usr/bin/env Rscript
@@ -252,7 +254,8 @@ process plot {
 	count_df=read.csv("${count}",header=TRUE,sep=",")
 	count <- ggplot(count_df, aes(x=condition, y=count)) + 
 			geom_point(position=position_jitter(w=0.1,h=0)) + 
-			scale_y_log10(breaks=c(25,100,400))
+			scale_y_log10(breaks=c(25,100,400)) +
+			ggtitle("${title}")
 	ggsave("count.pdf",count, width=5, height=5)
 	
 
