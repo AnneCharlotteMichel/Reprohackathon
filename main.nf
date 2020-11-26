@@ -184,8 +184,9 @@ process deseq {
         output :
         file "deseq_filt.csv" into result_filt_deseq
 	file "deseq_result.csv" into result_deseq
-
-        script :
+	tuple file("padj_min.csv"), val("title") into gene_counts
+        
+	script :
         """
         #!/usr/bin/env Rscript
         library("DESeq2")
@@ -198,12 +199,27 @@ process deseq {
         keep <- rowSums(counts(dds)) >= 10
         dds <- dds[keep,]
         dds <- DESeq(dds)
+
         res <- results(dds)
-	res=as.data.frame(res)
+
+	padj_min <- plotCounts(dds, gene=which.min(res[,"padj"]), intgroup="condition", returnData=TRUE)
+        write.csv(padj_min, file="padj_min.csv")
+
+	res<-as.data.frame(res)
 	resOrdered <- res[order(res[,"padj"]),]
 	write.csv(resOrdered, file="deseq_result.csv")
 	res_filt <- subset(resOrdered, padj < 0.01)
 	write.csv(res_filt, file="deseq_filt.csv")
+	
+	padj=min(res_filt[,"padj"])
+	row_padj_min <- res_filt[match(min(res_filt[,"padj"]),res_filt[,"padj"]),]
+	name_padj_min <- rownames(row_padj_min)
+	print(name_padj_min)
+	title = paste("gene_name:",name_padj_min,"padj:",padj,sep=" ") 
+	print(title)
+
+
+
         """
 }
 
@@ -211,10 +227,10 @@ process plot {
 	publishDir "plot/", mode: 'copy', overwrite: true	
 	input:
 	path x from result_deseq
-
+	path(count) from "/mnt/Reprohackathon/deseq_resultat/padj_min.csv"
 	output:
 	file "plot.pdf"
-
+	file "count.pdf"
 	script:
 	"""
         #!/usr/bin/env Rscript
@@ -232,6 +248,13 @@ process plot {
 	# On ajoute des lignes pour rendre padj = 0,05 visible, ainsi que log2FoldChange=0,6/-0,6
 	p2 <- p + geom_vline(xintercept=c(-0.6, 0.6), col="red") + geom_hline(yintercept=-log10(0.05), col="red")
 	ggsave("plot.pdf",p2, width=5, height=5)
+
+	count_df=read.csv("${count}",header=TRUE,sep=",")
+	count <- ggplot(count_df, aes(x=condition, y=count)) + 
+			geom_point(position=position_jitter(w=0.1,h=0)) + 
+			scale_y_log10(breaks=c(25,100,400))
+	ggsave("count.pdf",count, width=5, height=5)
+	
 
 """
 
