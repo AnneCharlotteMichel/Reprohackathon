@@ -251,16 +251,14 @@ process plot {
 	padj=min(res_filt[,"padj"])
 	row_padj_min <- res_filt[match(min(res_filt[,"padj"]),res_filt[,"padj"]),]
 	name_padj_min <- rownames(row_padj_min)
-	print(name_padj_min)
-	title <- paste("gene_name:",name_padj_min,"padj:",padj,sep=" ") 
-	print(title)
+	title <- paste("gene:",name_padj_min,"padj:",padj,sep=" ") 
 
 
 	count_df=read.csv("${count}",header=TRUE,sep=",")
 	count <- ggplot(count_df, aes(x=condition, y=count)) + 
 			geom_point(position=position_jitter(w=0.1,h=0)) + 
-			scale_y_log10(breaks=c(25,100,400)) +
 			ggtitle(title)
+			
 	ggsave("count.pdf",count, width=5, height=5)
 	
 
