@@ -249,7 +249,7 @@ process plot {
 
 	res_filt=read.csv("${result_filt}", header=TRUE, sep=",", row.names=1)
 	padj=min(res_filt[,"padj"])
-	padj=round(padj, digits=4)
+	padj=round(padj, digits=8)
 	row_padj_min <- res_filt[match(min(res_filt[,"padj"]),res_filt[,"padj"]),]
 	name_padj_min <- rownames(row_padj_min)
 	title <- paste("gene:",name_padj_min,"padj:",padj,sep=" ") 
