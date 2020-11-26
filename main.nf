@@ -184,7 +184,7 @@ process deseq {
         output :
         file "deseq_filt.csv" into result_filt_deseq
 	file "deseq_result.csv" into result_deseq
-	tuple file("padj_min.csv"), val("title") into gene_counts
+	file("padj_min.csv") into gene_counts
         
 	script :
         """
@@ -211,12 +211,6 @@ process deseq {
 	res_filt <- subset(resOrdered, padj < 0.01)
 	write.csv(res_filt, file="deseq_filt.csv")
 	
-	padj=min(res_filt[,"padj"])
-	row_padj_min <- res_filt[match(min(res_filt[,"padj"]),res_filt[,"padj"]),]
-	name_padj_min <- rownames(row_padj_min)
-	print(name_padj_min)
-	title = paste("gene_name:",name_padj_min,"padj:",padj,sep=" ") 
-	print(title)
 
 
 
@@ -227,7 +221,8 @@ process plot {
 	publishDir "plot/", mode: 'copy', overwrite: true	
 	input:
 	path x from result_deseq
-	tuple path(count), val(title) from gene_counts
+	path count from gene_counts
+	path result_filt from result_filt_deseq
 
 	output:
 	file "plot.pdf"
@@ -251,11 +246,21 @@ process plot {
 	p2 <- p + geom_vline(xintercept=c(-0.6, 0.6), col="red") + geom_hline(yintercept=-log10(0.05), col="red")
 	ggsave("plot.pdf",p2, width=5, height=5)
 
+
+	res_filt=read.csv("${result_filt}", header=TRUE, sep=",")
+	padj=min(res_filt[,"padj"])
+	row_padj_min <- res_filt[match(min(res_filt[,"padj"]),res_filt[,"padj"]),]
+	name_padj_min <- rownames(row_padj_min)
+	print(name_padj_min)
+	title <- paste("gene_name:",name_padj_min,"padj:",padj,sep=" ") 
+	print(title)
+
+
 	count_df=read.csv("${count}",header=TRUE,sep=",")
 	count <- ggplot(count_df, aes(x=condition, y=count)) + 
 			geom_point(position=position_jitter(w=0.1,h=0)) + 
 			scale_y_log10(breaks=c(25,100,400)) +
-			ggtitle("${title}")
+			ggtitle(title)
 	ggsave("count.pdf",count, width=5, height=5)
 	
 
